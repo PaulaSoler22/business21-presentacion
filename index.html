@@ -405,6 +405,33 @@
         .dec-shot img { width:100%; max-width:920px; border-radius:10px; border:1px solid #e0e6ea; box-shadow:0 4px 16px rgba(0,0,0,0.1); cursor:zoom-in; transition:transform .3s ease; }
         .dec-shot img:hover { transform:scale(1.01); }
 
+        /* ===== RECORRIDO POR PASOS (mismo componente que Planificación de Focus) ===== */
+        .phase-intro { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:22px; color:#555; line-height:1.6; }
+        .phase-intro .badge { margin:0; }
+        .plan-steps { position:relative; display:grid; grid-template-columns:repeat(var(--steps,9),1fr); gap:8px; margin-bottom:24px; }
+        .plan-steps::before { content:''; position:absolute; top:23px; left:calc(50% / var(--steps,9)); right:calc(50% / var(--steps,9)); height:3px; background:#e2e8ee; z-index:0; }
+        .plan-step { position:relative; z-index:1; background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; font-family:'Montserrat',sans-serif; color:#777; padding:0; }
+        .plan-step .ps-num { width:46px; height:46px; border-radius:50%; background:#fff; border:3px solid #e2e8ee; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.05em; transition:all .25s ease; }
+        .plan-step .ps-label { font-size:0.74em; font-weight:700; text-align:center; line-height:1.25; }
+        .plan-step:hover .ps-num { border-color:var(--primary-light); color:var(--primary); }
+        .plan-step.active .ps-num { background:linear-gradient(135deg,var(--primary),var(--amber)); border-color:transparent; color:#fff; box-shadow:0 4px 14px rgba(0,0,0,0.18); transform:scale(1.08); }
+        .plan-step.active .ps-label { color:var(--primary-dark); }
+        .plan-panel { display:none; animation: planIn .35s ease; }
+        @keyframes planIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+        .plan-panel.active { display:block; }
+        .plan-tabs { display:flex; flex-wrap:wrap; gap:8px; padding:16px 26px 0; background:#f7f9fb; align-items:center; }
+        .plan-tabs-label { font-family:'Montserrat',sans-serif; font-weight:700; font-size:0.72em; text-transform:uppercase; letter-spacing:0.5px; color:var(--primary-dark); margin-right:4px; }
+        .plan-tab { background:#fff; border:1px solid #dfe5ea; border-radius:20px; padding:5px 13px; font-size:0.8em; color:#555; }
+        /* Capturas de Cuadro de Mando y Decisiones: todas en el mismo tamaño pequeño; clic = lightbox */
+        .plan-panel .dec-shot img, .dec-block .dec-shot img { display:block; width:520px; max-width:100%; height:260px; object-fit:contain; background:#fff; padding:8px; margin:0 auto; }
+        .plan-panel .dec-shot::after, .dec-block .dec-shot::after { content:"🔍 Haz clic en la imagen para ampliarla"; display:block; margin-top:10px; font-family:'Montserrat',sans-serif; font-weight:600; font-size:0.78em; color:var(--primary-dark); }
+        .plan-why { padding:16px 26px 0; background:#f7f9fb; }
+        .plan-why .cm-why-text { margin-top:8px; background:#fff; }
+        @media (max-width: 900px) {
+            .plan-steps { grid-template-columns:repeat(5,1fr); row-gap:16px; }
+            .plan-steps::before { display:none; }
+        }
+
         /* ===== GALLERY + LIGHTBOX ===== */
         .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; margin-top: 28px; }
         .shot {
@@ -1010,134 +1037,126 @@
         </div>
     </div>
 
-    <!-- ===================== SLIDE 13: CUADRO DE MANDO · PARTE 1 [VARIABLE] ===================== -->
+    <!-- ===================== SLIDE 13: CUADRO DE MANDO [VARIABLE] ===================== -->
     <div class="slide" id="slide13">
         <div class="slide-header">
-            <h1>📊 Cuadro de Mando · Parte 1</h1>
-            <h2>Valor, indicadores clave, mercado, marca, precios y producción</h2>
+            <h1>📊 Cuadro de Mando</h1>
+            <h2>Valor, indicadores clave, mercado, marca, precios, producción, ingresos, ventas y estados financieros</h2>
             <div class="slide-number">10</div>
         </div>
         <div class="slide-content">
-            <div class="cm-grid">
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-valor.jpg" alt="Valor de la compañía" loading="lazy"
-                        onclick="openLightbox('assets/cm-valor.jpg','Valor de la compañía')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🏆 Valor</h3><span class="cm-badge">Resultado</span></div>
-                        <p class="cm-desc">Valor de la compañía de las 5 empresas, comparado con el periodo anterior: diferencia y variación porcentual.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Es la métrica del <strong>ranking final</strong>. Te dice si tu estrategia está funcionando y cómo vas frente a la competencia.</p>
-                    </div>
+            <div class="phase-intro">
+                <span class="badge badge-teal">10 pantallas</span>
+                <span>Recorre los informes en orden: empieza por el Valor y los indicadores clave, sigue con el mercado, la marca, los precios y la producción, y termina con ingresos, ventas y estados financieros.</span>
+            </div>
+
+            <div class="plan-steps" style="--steps:10">
+                <button class="plan-step active" onclick="showPlanStep(this,1)"><span class="ps-num">1</span><span class="ps-label">Valor</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,2)"><span class="ps-num">2</span><span class="ps-label">Indicadores Clave</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,3)"><span class="ps-num">3</span><span class="ps-label">Mercado</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,4)"><span class="ps-num">4</span><span class="ps-label">Marca</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,5)"><span class="ps-num">5</span><span class="ps-label">Precios</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,6)"><span class="ps-num">6</span><span class="ps-label">Producción</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,7)"><span class="ps-num">7</span><span class="ps-label">Ingresos</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,8)"><span class="ps-num">8</span><span class="ps-label">Ventas</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,9)"><span class="ps-num">9</span><span class="ps-label">Cuenta de Resultados</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,10)"><span class="ps-num">10</span><span class="ps-label">Balance</span></button>
+            </div>
+
+            <div class="plan-panel active" data-step="1">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">1</div><div><h3>🏆 Valor</h3><p>Valor de la compañía de las 5 empresas, comparado con el periodo anterior: diferencia y variación porcentual.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Resultado</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Es la métrica del <strong>ranking final</strong>. Te dice si tu estrategia está funcionando y cómo vas frente a la competencia.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-valor.jpg" alt="Valor de la compañía" loading="lazy" onclick="openLightbox('assets/cm-valor.jpg','Valor de la compañía')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-indicadores.jpg" alt="Indicadores clave de la compañía" loading="lazy"
-                        onclick="openLightbox('assets/cm-indicadores.jpg','Indicadores clave de la compañía')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🎯 Indicadores Clave</h3><span class="cm-badge">KPIs</span></div>
-                        <p class="cm-desc">Unidades, participación, ingresos, margen, beneficios, endeudamiento, ocupación de fábricas, inventario, marca, innovación, tecnología y capacidades.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Resume en una sola tabla <strong>todos los factores</strong> que alimentan el Valor de la Compañía. Empieza siempre por aquí.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="2">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">2</div><div><h3>🎯 Indicadores Clave</h3><p>Unidades, participación, ingresos, margen, beneficios, endeudamiento, ocupación de fábricas, inventario, marca, innovación, tecnología y capacidades.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">KPIs</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Resume en una sola tabla <strong>todos los factores</strong> que alimentan el Valor de la Compañía. Empieza siempre por aquí.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-indicadores.jpg" alt="Indicadores clave de la compañía" loading="lazy" onclick="openLightbox('assets/cm-indicadores.jpg','Indicadores clave de la compañía')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-mercado.jpg" alt="Unidades vendidas por mercado y producto" loading="lazy"
-                        onclick="openLightbox('assets/cm-mercado.jpg','Unidades vendidas por mercado y producto')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🌍 Mercado</h3><span class="cm-badge">Mercado</span></div>
-                        <p class="cm-desc">Unidades totales vendidas por mercado y producto (todas las compañías), su peso porcentual y la evolución del sector.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Muestra <strong>dónde está la demanda</strong> y cómo crece. Es la base para decidir a qué nuevo mercado entrar.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="3">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">3</div><div><h3>🌍 Mercado</h3><p>Unidades totales vendidas por mercado y producto (todas las compañías), su peso porcentual y la evolución del sector.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Mercado</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Muestra <strong>dónde está la demanda</strong> y cómo crece. Es la base para decidir a qué nuevo mercado entrar.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-mercado.jpg" alt="Unidades vendidas por mercado y producto" loading="lazy" onclick="openLightbox('assets/cm-mercado.jpg','Unidades vendidas por mercado y producto')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-marca.jpg" alt="Valor de marca por mercado y producto" loading="lazy"
-                        onclick="openLightbox('assets/cm-marca.jpg','Valor de marca por mercado y producto')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>⭐ Marca</h3><span class="cm-badge">Marketing</span></div>
-                        <p class="cm-desc">Valor de marca de tu compañía en cada mercado y producto (escala 10 a 100), con su evolución.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Te indica si tu <strong>inversión en promoción</strong> está rindiendo y dónde reforzarla.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="4">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">4</div><div><h3>⭐ Marca</h3><p>Valor de marca de tu compañía en cada mercado y producto (escala 10 a 100), con su evolución.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Marketing</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Te indica si tu <strong>inversión en promoción</strong> está rindiendo y dónde reforzarla.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-marca.jpg" alt="Valor de marca por mercado y producto" loading="lazy" onclick="openLightbox('assets/cm-marca.jpg','Valor de marca por mercado y producto')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-precios.jpg" alt="Nivel de precios por compañía" loading="lazy"
-                        onclick="openLightbox('assets/cm-precios.jpg','Nivel de precios por compañía')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>💲 Precios</h3><span class="cm-badge">Competencia</span></div>
-                        <p class="cm-desc">Tu histórico de precios y los precios de cada competidor por mercado y producto.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Saber a qué precio vende <strong>la competencia</strong> te permite posicionarte frente a Ahorradores, Clásicos o Innovadores.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="5">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">5</div><div><h3>💲 Precios</h3><p>Tu histórico de precios y los precios de cada competidor por mercado y producto.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Competencia</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Saber a qué precio vende <strong>la competencia</strong> te permite posicionarte frente a Ahorradores, Clásicos o Innovadores.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-precios.jpg" alt="Nivel de precios por compañía" loading="lazy" onclick="openLightbox('assets/cm-precios.jpg','Nivel de precios por compañía')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-produccion.jpg" alt="Capacidad de producción, innovación y tecnología" loading="lazy"
-                        onclick="openLightbox('assets/cm-produccion.jpg','Capacidad de producción, innovación y tecnología')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🏭 Producción</h3><span class="cm-badge">Operaciones</span></div>
-                        <p class="cm-desc">Capacidad y producción real por fábrica, ocupación, inventario, costos de no calidad, almacenaje y logística, nivel de innovación y tecnología.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Detecta si te falta capacidad, si acumulas <strong>inventario</strong> o si los costos ocultos se comen tu margen.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="6">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">6</div><div><h3>🏭 Producción</h3><p>Capacidad y producción real por fábrica, ocupación, inventario, costos de no calidad, almacenaje y logística, nivel de innovación y tecnología.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Operaciones</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Detecta si te falta capacidad, si acumulas <strong>inventario</strong> o si los costos ocultos se comen tu margen.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-produccion.jpg" alt="Capacidad de producción, innovación y tecnología" loading="lazy" onclick="openLightbox('assets/cm-produccion.jpg','Capacidad de producción, innovación y tecnología')"></div>
+                </div>
+            </div>
+
+            <div class="plan-panel" data-step="7">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">7</div><div><h3>💵 Ingresos</h3><p>Ingresos de tu compañía desglosados por producto y por mercado.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Ventas</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Revela tu <strong>dependencia</strong> de un solo mercado o producto y el efecto real de tu expansión.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-ingresos.jpg" alt="Ingresos por producto y mercado" loading="lazy" onclick="openLightbox('assets/cm-ingresos.jpg','Ingresos por producto y mercado')"></div>
+                </div>
+            </div>
+
+            <div class="plan-panel" data-step="8">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">8</div><div><h3>📦 Ventas</h3><p>Ingresos y unidades vendidas por mercado y producto, y total de unidades de la compañía.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Ventas</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Compara unidades vendidas con producidas para <strong>ajustar la producción</strong> del siguiente periodo.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-ventas.jpg" alt="Ingresos y unidades vendidas por compañía" loading="lazy" onclick="openLightbox('assets/cm-ventas.jpg','Ingresos y unidades vendidas por compañía')"></div>
+                </div>
+            </div>
+
+            <div class="plan-panel" data-step="9">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">9</div><div><h3>📈 Cuenta de Resultados</h3><p>De los ingresos al beneficio neto: costos de fabricación y logística, margen de contribución, gastos de explotación, depreciación y gastos financieros.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Finanzas</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">El beneficio pesa el <strong>41 %</strong> del Valor de la Compañía. Aquí ves qué partida mejora o empeora tu resultado.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-resultados.jpg" alt="Cuenta de resultados" loading="lazy" onclick="openLightbox('assets/cm-resultados.jpg','Cuenta de resultados')"></div>
+                </div>
+            </div>
+
+            <div class="plan-panel" data-step="10">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">10</div><div><h3>⚖️ Balance</h3><p>Activo fijo, caja, inventarios, clientes, recursos propios, préstamos, crédito extraordinario y proveedores.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Finanzas</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué analizarlo</span><p class="cm-why-text">Controla tu <strong>caja y endeudamiento</strong> antes de invertir en fábricas o pedir préstamos. Evita el crédito extraordinario.</p></div>
+                    <div class="dec-shot"><img src="assets/cm-balance.jpg" alt="Balance de situación" loading="lazy" onclick="openLightbox('assets/cm-balance.jpg','Balance de situación')"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===================== SLIDE 14: CUADRO DE MANDO · PARTE 2 [VARIABLE] ===================== -->
+    <!-- ===================== SLIDE 14: DIVISORIA — DECISIONES DEL SIMULADOR [FIJO] ===================== -->
     <div class="slide" id="slide14">
-        <div class="slide-header">
-            <h1>📊 Cuadro de Mando · Parte 2</h1>
-            <h2>Ingresos, ventas y estados financieros</h2>
-            <div class="slide-number">11</div>
-        </div>
-        <div class="slide-content">
-            <div class="cm-grid">
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-ingresos.jpg" alt="Ingresos por producto y mercado" loading="lazy"
-                        onclick="openLightbox('assets/cm-ingresos.jpg','Ingresos por producto y mercado')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>💵 Ingresos</h3><span class="cm-badge">Ventas</span></div>
-                        <p class="cm-desc">Ingresos de tu compañía desglosados por producto y por mercado.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Revela tu <strong>dependencia</strong> de un solo mercado o producto y el efecto real de tu expansión.</p>
-                    </div>
-                </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-ventas.jpg" alt="Ingresos y unidades vendidas por compañía" loading="lazy"
-                        onclick="openLightbox('assets/cm-ventas.jpg','Ingresos y unidades vendidas por compañía')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>📦 Ventas</h3><span class="cm-badge">Ventas</span></div>
-                        <p class="cm-desc">Ingresos y unidades vendidas por mercado y producto, y total de unidades de la compañía.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Compara unidades vendidas con producidas para <strong>ajustar la producción</strong> del siguiente periodo.</p>
-                    </div>
-                </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-resultados.jpg" alt="Cuenta de resultados" loading="lazy"
-                        onclick="openLightbox('assets/cm-resultados.jpg','Cuenta de resultados')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>📈 Cuenta de Resultados</h3><span class="cm-badge">Finanzas</span></div>
-                        <p class="cm-desc">De los ingresos al beneficio neto: costos de fabricación y logística, margen de contribución, gastos de explotación, depreciación y gastos financieros.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">El beneficio pesa el <strong>41 %</strong> del Valor de la Compañía. Aquí ves qué partida mejora o empeora tu resultado.</p>
-                    </div>
-                </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/cm-balance.jpg" alt="Balance de situación" loading="lazy"
-                        onclick="openLightbox('assets/cm-balance.jpg','Balance de situación')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>⚖️ Balance</h3><span class="cm-badge">Finanzas</span></div>
-                        <p class="cm-desc">Activo fijo, caja, inventarios, clientes, recursos propios, préstamos, crédito extraordinario y proveedores.</p>
-                        <span class="cm-why-label">💡 Por qué analizarlo</span>
-                        <p class="cm-why-text">Controla tu <strong>caja y endeudamiento</strong> antes de invertir en fábricas o pedir préstamos. Evita el crédito extraordinario.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===================== SLIDE 15: DIVISORIA — DECISIONES DEL SIMULADOR [FIJO] ===================== -->
-    <div class="slide" id="slide15">
         <div class="section-divider">
             <div class="sd-icon">🕹️</div>
             <div class="sd-eyebrow">Sección</div>
@@ -1147,95 +1166,100 @@
         </div>
     </div>
 
-    <!-- ===================== SLIDE 16: DECISIONES DEL SIMULADOR [VARIABLE] ===================== -->
-    <div class="slide" id="slide16">
+    <!-- ===================== SLIDE 15: DECISIONES DEL SIMULADOR [VARIABLE] ===================== -->
+    <div class="slide" id="slide15">
         <div class="slide-header">
             <h1>🕹️ Las Decisiones del Simulador</h1>
             <h2>Las 7 pantallas donde tu equipo decide cada periodo</h2>
-            <div class="slide-number">12</div>
+            <div class="slide-number">11</div>
         </div>
         <div class="slide-content">
-            <div class="cm-grid">
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/dec-estrategicas.jpg" alt="Decisiones estratégicas" loading="lazy"
-                        onclick="openLightbox('assets/dec-estrategicas.jpg','Decisiones estratégicas')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🌍&nbsp;1&nbsp;·&nbsp;Estratégicas</h3><span class="cm-badge">Expansión</span></div>
-                        <p class="cm-desc">Decides si <strong>construyes nuevas fábricas</strong> o <strong>entras en nuevos mercados</strong>, y ves el presupuesto disponible para promoción, innovación y tecnología.</p>
-                        <span class="cm-why-label">💡 Por qué importa</span>
-                        <p class="cm-why-text">Es la <strong>primera pestaña</strong> que debes completar: define el rumbo de tu globalización y condiciona el resto de decisiones.</p>
-                    </div>
+            <div class="phase-intro">
+                <span class="badge badge-orange">7 pantallas</span>
+                <span>Recorre las pestañas en orden: empieza por las decisiones estratégicas, sigue con precios, promoción, innovación, producción y capacitación, y cierra con la financiación.</span>
+            </div>
+
+            <div class="plan-steps" style="--steps:7">
+                <button class="plan-step active" onclick="showPlanStep(this,1)"><span class="ps-num">1</span><span class="ps-label">Estratégicas</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,2)"><span class="ps-num">2</span><span class="ps-label">Precios</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,3)"><span class="ps-num">3</span><span class="ps-label">Promoción</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,4)"><span class="ps-num">4</span><span class="ps-label">Innovación</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,5)"><span class="ps-num">5</span><span class="ps-label">Producción</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,6)"><span class="ps-num">6</span><span class="ps-label">Capacitación</span></button>
+                <button class="plan-step" onclick="showPlanStep(this,7)"><span class="ps-num">7</span><span class="ps-label">Financiación</span></button>
+            </div>
+
+            <div class="plan-panel active" data-step="1">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">1</div><div><h3>🌍 Estratégicas</h3><p>Decides si <strong>construyes nuevas fábricas</strong> o <strong>entras en nuevos mercados</strong>, y ves el presupuesto disponible para promoción, innovación y tecnología.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Expansión</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué importa</span><p class="cm-why-text">Es la <strong>primera pestaña</strong> que debes completar: define el rumbo de tu globalización y condiciona el resto de decisiones.</p></div>
+                    <div class="dec-shot"><img src="assets/dec-estrategicas.jpg" alt="Decisiones estratégicas" loading="lazy" onclick="openLightbox('assets/dec-estrategicas.jpg','Decisiones estratégicas')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/dec-precios.jpg" alt="Decisiones de precios" loading="lazy"
-                        onclick="openLightbox('assets/dec-precios.jpg','Decisiones de precios')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>💲&nbsp;2&nbsp;·&nbsp;Precios</h3><span class="cm-badge">Marketing</span></div>
-                        <p class="cm-desc">Fijas el precio por unidad de televisores y reproductores en cada mercado, con los precios de referencia como guía.</p>
-                        <span class="cm-why-label">💡 Por qué importa</span>
-                        <p class="cm-why-text">Si abres un mercado, pon su precio <strong>ese mismo periodo</strong> o no podrás hacerlo después. Y una vez vendes en un mercado, no puedes retirarte.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="2">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">2</div><div><h3>💲 Precios</h3><p>Fijas el precio por unidad de televisores y reproductores en cada mercado, con los precios de referencia como guía.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Marketing</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué importa</span><p class="cm-why-text">Si abres un mercado, pon su precio <strong>ese mismo periodo</strong> o no podrás hacerlo después. Y una vez vendes en un mercado, no puedes retirarte.</p></div>
+                    <div class="dec-shot"><img src="assets/dec-precios.jpg" alt="Decisiones de precios" loading="lazy" onclick="openLightbox('assets/dec-precios.jpg','Decisiones de precios')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/dec-promocion.jpg" alt="Decisiones de promoción" loading="lazy"
-                        onclick="openLightbox('assets/dec-promocion.jpg','Decisiones de promoción')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>📣&nbsp;3&nbsp;·&nbsp;Promoción</h3><span class="cm-badge">Marketing</span></div>
-                        <p class="cm-desc">Asignas el presupuesto de promoción por mercado y producto para ganar notoriedad.</p>
-                        <span class="cm-why-label">💡 Por qué importa</span>
-                        <p class="cm-why-text">Junto con tu cuota de mercado determina el <strong>valor de marca</strong>, que pesa un 13 % en el Valor de la Compañía.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="3">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">3</div><div><h3>📣 Promoción</h3><p>Asignas el presupuesto de promoción por mercado y producto para ganar notoriedad.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Marketing</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué importa</span><p class="cm-why-text">Junto con tu cuota de mercado determina el <strong>valor de marca</strong>, que pesa un 13 % en el Valor de la Compañía.</p></div>
+                    <div class="dec-shot"><img src="assets/dec-promocion.jpg" alt="Decisiones de promoción" loading="lazy" onclick="openLightbox('assets/dec-promocion.jpg','Decisiones de promoción')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/dec-innovacion.jpg" alt="Decisiones de innovación y tecnología industrial" loading="lazy"
-                        onclick="openLightbox('assets/dec-innovacion.jpg','Decisiones de innovación y tecnología industrial')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>💡&nbsp;4&nbsp;·&nbsp;Innovación</h3><span class="cm-badge">I+D</span></div>
-                        <p class="cm-desc">Inviertes en <strong>innovación de producto</strong> (por línea) y en <strong>tecnología industrial</strong> (por tipo de fábrica).</p>
-                        <span class="cm-why-label">💡 Por qué importa</span>
-                        <p class="cm-why-text">Mejora el atractivo del producto, los costos, la capacidad y la fiabilidad. Ambos factores suman un <strong>23 %</strong> del Valor de la Compañía.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="4">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">4</div><div><h3>💡 Innovación</h3><p>Inviertes en <strong>innovación de producto</strong> (por línea) y en <strong>tecnología industrial</strong> (por tipo de fábrica).</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">I+D</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué importa</span><p class="cm-why-text">Mejora el atractivo del producto, los costos, la capacidad y la fiabilidad. Ambos factores suman un <strong>23 %</strong> del Valor de la Compañía.</p></div>
+                    <div class="dec-shot"><img src="assets/dec-innovacion.jpg" alt="Decisiones de innovación y tecnología industrial" loading="lazy" onclick="openLightbox('assets/dec-innovacion.jpg','Decisiones de innovación y tecnología industrial')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/dec-produccion.jpg" alt="Decisiones de producción" loading="lazy"
-                        onclick="openLightbox('assets/dec-produccion.jpg','Decisiones de producción')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🏭&nbsp;5&nbsp;·&nbsp;Producción</h3><span class="cm-badge">Operaciones</span></div>
-                        <p class="cm-desc">Decides cuántas unidades fabricar de cada producto en cada fábrica, hasta su capacidad máxima, o <strong>cesas la producción</strong> de una línea.</p>
-                        <span class="cm-why-label">💡 Por qué importa</span>
-                        <p class="cm-why-text">Lo que no vendas queda en <strong>inventario</strong> y genera costos; producir poco te hace perder ventas. Ajusta según tu previsión de demanda.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="5">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">5</div><div><h3>🏭 Producción</h3><p>Decides cuántas unidades fabricar de cada producto en cada fábrica, hasta su capacidad máxima, o <strong>cesas la producción</strong> de una línea.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Operaciones</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué importa</span><p class="cm-why-text">Lo que no vendas queda en <strong>inventario</strong> y genera costos; producir poco te hace perder ventas. Ajusta según tu previsión de demanda.</p></div>
+                    <div class="dec-shot"><img src="assets/dec-produccion.jpg" alt="Decisiones de producción" loading="lazy" onclick="openLightbox('assets/dec-produccion.jpg','Decisiones de producción')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/dec-capacitacion.jpg" alt="Decisiones de capacitación" loading="lazy"
-                        onclick="openLightbox('assets/dec-capacitacion.jpg','Decisiones de capacitación')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🎓&nbsp;6&nbsp;·&nbsp;Capacitación</h3><span class="cm-badge">Talento</span></div>
-                        <p class="cm-desc">Defines el presupuesto de desarrollo de capacidades y repartes hasta 21 puntos de prioridad entre Dirección, Marketing, Innovación y Tecnología.</p>
-                        <span class="cm-why-label">💡 Por qué importa</span>
-                        <p class="cm-why-text">Una organización mejor capacitada <strong>obtiene mejores resultados</strong> en todas las áreas de la empresa.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="6">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">6</div><div><h3>🎓 Capacitación</h3><p>Defines el presupuesto de desarrollo de capacidades y repartes hasta 21 puntos de prioridad entre Dirección, Marketing, Innovación y Tecnología.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Talento</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué importa</span><p class="cm-why-text">Una organización mejor capacitada <strong>obtiene mejores resultados</strong> en todas las áreas de la empresa.</p></div>
+                    <div class="dec-shot"><img src="assets/dec-capacitacion.jpg" alt="Decisiones de capacitación" loading="lazy" onclick="openLightbox('assets/dec-capacitacion.jpg','Decisiones de capacitación')"></div>
                 </div>
-                <div class="cm-card">
-                    <div class="cm-img"><img src="assets/dec-financiacion.jpg" alt="Decisiones de financiación" loading="lazy"
-                        onclick="openLightbox('assets/dec-financiacion.jpg','Decisiones de financiación')"></div>
-                    <div class="cm-body">
-                        <div class="cm-titlerow"><h3>🏦&nbsp;7&nbsp;·&nbsp;Financiación</h3><span class="cm-badge">Finanzas</span></div>
-                        <p class="cm-desc">Solicitas préstamos a corto o largo plazo y fijas el porcentaje de dividendos para los accionistas.</p>
-                        <span class="cm-why-label">💡 Por qué importa</span>
-                        <p class="cm-why-text">Son más baratos que el crédito extraordinario, pero el banco los limita según tus resultados. Con <strong>Recursos Propios negativos</strong> no tendrás préstamos a largo plazo.</p>
-                    </div>
+            </div>
+
+            <div class="plan-panel" data-step="7">
+                <div class="dec-block">
+                    <div class="dec-head"><div class="dec-num">7</div><div><h3>🏦 Financiación</h3><p>Solicitas préstamos a corto o largo plazo y fijas el porcentaje de dividendos para los accionistas.</p></div></div>
+                    <div class="plan-tabs"><span class="plan-tabs-label">Categoría:</span><span class="plan-tab">Finanzas</span></div>
+                    <div class="plan-why"><span class="cm-why-label">💡 Por qué importa</span><p class="cm-why-text">Son más baratos que el crédito extraordinario, pero el banco los limita según tus resultados. Con <strong>Recursos Propios negativos</strong> no tendrás préstamos a largo plazo.</p></div>
+                    <div class="dec-shot"><img src="assets/dec-financiacion.jpg" alt="Decisiones de financiación" loading="lazy" onclick="openLightbox('assets/dec-financiacion.jpg','Decisiones de financiación')"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===================== SLIDE 17: MÉTODOS DE IMPLEMENTACIÓN ===================== -->
-    <div class="slide" id="slide17">
+    <!-- ===================== SLIDE 16: MÉTODOS DE IMPLEMENTACIÓN ===================== -->
+    <div class="slide" id="slide16">
         <div class="slide-header">
             <h1>📚 Métodos de Implementación</h1>
             <h2>Cuatro formas de integrar el simulador en tu programa académico</h2>
-            <div class="slide-number">13</div>
+            <div class="slide-number">12</div>
         </div>
         <div class="slide-content">
 
@@ -1404,12 +1428,12 @@
         </div>
     </div>
 
-    <!-- ===================== SLIDE 18: FAQ ===================== -->
-    <div class="slide" id="slide18">
+    <!-- ===================== SLIDE 17: FAQ ===================== -->
+    <div class="slide" id="slide17">
         <div class="slide-header">
             <h1>❓ Preguntas Frecuentes</h1>
             <h2>Las dudas más comunes antes de iniciar la simulación</h2>
-            <div class="slide-number">14</div>
+            <div class="slide-number">13</div>
         </div>
         <div class="slide-content">
             <div class="accordion">
@@ -1445,8 +1469,8 @@
         </div>
     </div>
 
-    <!-- ===================== SLIDE 19: CIERRE ===================== -->
-    <div class="slide" id="slide19">
+    <!-- ===================== SLIDE 18: CIERRE ===================== -->
+    <div class="slide" id="slide18">
         <div class="closing">
             <h1>¡Gracias!</h1>
             <p class="thanks-sub">Gracias por participar en Business21</p>
@@ -1493,7 +1517,7 @@
 <!-- ===================== NAV BAR ===================== -->
 <div class="nav-bar">
     <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>◀ Anterior</button>
-    <div class="slide-counter" id="slideCounter">1 / 19</div>
+    <div class="slide-counter" id="slideCounter">1 / 18</div>
     <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente ▶</button>
 </div>
 
@@ -1532,6 +1556,13 @@
 
     function toggleAccordion(header) { header.parentElement.classList.toggle('active'); }
     function toggleFactor(header) { header.parentElement.classList.toggle('active'); }
+
+    // ===== RECORRIDO POR PASOS (Cuadro de Mando y Decisiones) =====
+    function showPlanStep(btn, n) {
+        const box = btn.closest(".slide-content");
+        box.querySelectorAll(".plan-step").forEach(function(b, i) { b.classList.toggle("active", i === n - 1); });
+        box.querySelectorAll(".plan-panel").forEach(function(p) { p.classList.toggle("active", p.dataset.step == n); });
+    }
 
     // ===== LIGHTBOX =====
     const lightbox = document.getElementById('lightbox');
